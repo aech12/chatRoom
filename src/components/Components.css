@@ -1,0 +1,16 @@
+h3 {
+  color: rgb(119, 123, 158);
+}
+
+a {
+  text-decoration: none;
+  color: rgb(155, 168, 197);
+}
+.active a{
+  color: rgba(199, 199, 199, 0.644);
+}
+
+ul {
+  list-style: none;
+}
+

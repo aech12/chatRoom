@@ -1,0 +1,47 @@
+:root {
+  --bg-light: rgb(202, 168, 93);
+  --bg-dark: rgb(22, 28, 105);
+}
+
+.App {
+  text-align: center;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.App {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  grid-template-rows: 5fr 60px;
+  grid-template-areas: "chatRooms messages"
+                       "addRoom sendMessage";
+  height: 100vh;
+}
+
+.messageList {
+  grid-area: messages;
+  background: var(--bg-light);
+}
+.roomList {
+  grid-area: chatRooms;
+  background: var(--bg-dark);
+}
+.newRoomForm {
+  grid-area: addRoom;
+}
+.sendMessageForm {
+  grid-area: sendMessage;
+}
+
+
+
+
+
+.message {
+  color: black;
+}
+
