@@ -23,8 +23,11 @@ class MessageList extends Component {
     if (!roomId) {
       return (
         <div className="messageList">
-            <div className="join-room">
+            <div className="joinRoom">
                 &larr; Join a room!
+            </div>
+            <div className="joinRoomMobile">
+                &uarr; Join a room!
             </div>
         </div>
       )

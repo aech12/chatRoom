@@ -28,14 +28,22 @@ export class SendMessageForm extends Component {
 
   render() {
     return (
-      <form className="sendMessageForm" onSubmit={this.handleSubmit}>
+      <form 
+      className="sendMessageForm" 
+      onSubmit={this.handleSubmit}>
         <input
+          className='sendMessageInput'
           disabled={this.props.disabled}
           onChange={this.handleChange}
           value={this.state.message}
           placeholder="Send message"
           type="text"
         />
+        <button 
+          // className=''
+          type='submit'
+          id=''> Send
+        </button>
       </form>
     )
   }

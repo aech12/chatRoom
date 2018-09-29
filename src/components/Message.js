@@ -5,8 +5,8 @@ class Message extends Component {
   render() {
     return (
       <div className='message'>
-        <div className='message.name'>{this.props.username}: </div>
-        <div className='message.text'>{this.props.text}</div>
+        <div className='messageName'>{this.props.username}: </div>
+        <div className='messageText'>{this.props.text}</div>
       </div>
     )
   }

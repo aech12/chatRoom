@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import '../containers/App.css';
 import './Components.css';
+import './ShowRooms.css';
 
 class Rooms extends Component {
   render() {
@@ -10,9 +11,8 @@ class Rooms extends Component {
       <div className='roomList center'>
         <ul>
           <h3>Room list</h3>
-
           {orderedRooms.map(room=> {
-            //very cool way to set a class
+            //very cool, easy way to set a class
             const active = this.props.roomId === room.id ? 'active' : ''
             return (
               <div>

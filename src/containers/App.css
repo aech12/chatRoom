@@ -16,7 +16,7 @@ html, body {
 .App {
   display: grid;
   grid-template-columns: 160px 1fr;
-  grid-template-rows: 5fr 60px;
+  grid-template-rows: 5fr 30px;
   grid-template-areas: "chatRooms messages"
                        "addRoom sendMessage";
   height: 100vh;
@@ -25,6 +25,11 @@ html, body {
 .messageList {
   grid-area: messages;
   background: var(--bg-light);
+}
+.joinRoom {
+  color: black;
+  display: flex;
+  justify-content: center;
 }
 .roomList {
   grid-area: chatRooms;
@@ -37,11 +42,49 @@ html, body {
   grid-area: sendMessage;
 }
 
-
-
-
-
 .message {
+  text-align: left;
+}
+.messageName {
+  color: rgb(59, 59, 59);
+  display: inline;
+} 
+.messageText {
   color: black;
+  display: inline;
 }
 
+@media screen and (max-width: 550px) {
+  .App {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    grid-template-rows: 60px 7fr 30px;
+    grid-template-areas: "chatRooms chatRooms"
+                         "messages messages"
+                         "addRoom sendMessage";                         ;
+    height: 100vh;
+  }
+
+  .roomList h3 {
+    display: none;
+  }
+  li {
+    float: left;
+  }
+
+  .joinRoom {
+    display: none;
+  }
+  .joinRoomMobile {
+    display: block;
+  }
+}
+
+@media screen and (min-width: 550px) {
+  .joinRoom {
+    display: block;
+  }
+  .joinRoomMobile {
+    display: none;
+  }
+}

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import '../containers/App.css';
+import './Components.css';
 
 class NewRoomForm extends Component {
 
@@ -8,16 +9,14 @@ class NewRoomForm extends Component {
     this.state = {
       roomName: ''
     }
-    this.handleChange = this.handleChange.bind(this)
-    this.handleSubmit = this.handleSubmit.bind(this)
   }
 
-  handleChange(e) {
+  handleChange = (e) => {
     this.setState({
       roomName: e.target.value
     })
   }
-  handleSubmit(e) {
+  handleSubmit = (e) => {
     e.preventDefault();
     this.props.addRoom(this.state.roomName);
     this.setState({
@@ -30,6 +29,7 @@ class NewRoomForm extends Component {
       <div className='newRoomForm'>
         <form onSubmit={this.handleSubmit}>
           <input
+            className='newRoomInput'
             value={this.state.roomName}
             onChange={this.handleChange}
             type='text'
@@ -37,6 +37,7 @@ class NewRoomForm extends Component {
             required
           />
           <button 
+            className='newRoomButton'
             type='submit'
             id='create-room-button'> + 
           </button>

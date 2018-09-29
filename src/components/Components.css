@@ -2,15 +2,41 @@ h3 {
   color: rgb(119, 123, 158);
 }
 
+/* anchor tags for the roomlists */
 a {
   text-decoration: none;
   color: rgb(155, 168, 197);
 }
 .active a{
-  color: rgba(199, 199, 199, 0.644);
+  color: rgba(173, 163, 13, 0.877);
 }
 
 ul {
   list-style: none;
+  padding: 0px;
+}
+.roomList {
+  text-align: center;
 }
 
+
+.newRoomInput {
+  width: 80%;
+}
+.newRoomButton {
+  width: 15%;
+}
+.newRoomForm {
+  display: inline;
+}
+
+.sendMessageInput {
+  width: 90%;
+}
+
+
+@media screen and (max-width: 700px) {
+  .sendMessageInput {
+    width: 70%;
+  }
+}
