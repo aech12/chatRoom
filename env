@@ -1,0 +1,5 @@
+CHATKIT_INSTANCE=v1:us1:fecd9767-860f-4925-8c57-e94fb9b2008b
+
+CHATKIT_TEST_TOKEN=https://us1.pusherplatform.io/services/chatkit_token_provider/v1/fecd9767-860f-4925-8c57-e94fb9b2008b/tokenw
+
+REACT_APP_V=test

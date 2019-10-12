@@ -1,125 +1,158 @@
-import React, { Component } from 'react';
-import Chatkit, { ChatManager, TokenProvider } from '@pusher/chatkit';
-import './App.css';
-import MessageList from '../components/MessageList';
-import SendMessageForm from '../components/SendMessageForm';
-import Rooms from '../components/Rooms';
-import NewRoomForm from '../components/NewRoomForm';
+import React, { Component } from "react";
+// import {  } from "@pusher/chatkit-client-react";
+import { ChatManager, TokenProvider } from "@pusher/chatkit-client";
+// import "./App.css";
+import {
+  subscribeToRoomAPI,
+  getRoomsAPI,
+  addRoomAPI,
+  sendMessageAPI
+} from "../apiCalls/apiCalls";
+import AppDrawer from "./AppDrawer";
+import { instanceLocator, testTokenProvider, userId } from "../config.js";
+import { ThemeProvider } from "@material-ui/styles";
+import { createMuiTheme } from "@material-ui/core/styles";
 
-import { instanceLocator, testTokenProvider } from '../config.js';
+const theme = createMuiTheme({
+  palette: {
+    type: "light",
+    primary: {
+      // contrastText: "#000",
+      main: "#ef2344",
+      light: "#ef2344",
+      dark: "#903745" // main: "#d04f65 "
+    },
+    background: {
+      default: "#e5e6e5",
+      main: "#e5e6e5",
+      light: "#e5e6e5"
+    }
+  }
+});
+
+// componentDidMount() {
+//   if (matchMedia("(prefers-color-scheme: dark)").matches) {
+//     this.setState({ darkMode: true });
+//   }
+// }
 
 class App extends Component {
   constructor() {
-    super()
+    super();
     this.state = {
       roomId: null,
       messages: [],
       joinableRooms: [],
-      joinedRooms: []
-    }
+      joinedRooms: [],
+      localDb: [{ text: "asd", senderId: 12 }]
+    };
   }
-
   componentDidMount() {
-    const chatManager = new Chatkit.ChatManager({
-      instanceLocator: instanceLocator,
-      userId: "aech12",
-      tokenProvider: new Chatkit.TokenProvider({
+    if (matchMedia("(prefers-color-scheme: dark)").matches) {
+      theme.palette.type = "dark";
+    }
+    console.log(theme);
+
+    const chatManager = new ChatManager({
+      instanceLocator,
+      userId,
+      tokenProvider: new TokenProvider({
         url: testTokenProvider
       })
     });
 
-    chatManager.connect()
+    chatManager
+      .connect()
       .then(currentUser => {
-        
         this.currentUser = currentUser;
         this.getRooms();
-        this.addRoom();
-        this.subscribeToRoom();
-
+        // this.addRoom();
+        //prettier-ignore
+        // this.subscribeToRoom('c1cad9df-2316-48e0-8717-d073da7bb7e8');
       })
+      // .then(currentUser => {
+      //   console.log("user", currentUser);
+      // })
       .catch(error => {
-        console.error("error connecting user:", error);
+        console.error(`ERROR connecting to Chatkit! ${error}`);
       });
   }
 
-  subscribeToRoom = (roomId) => {
-    this.setState({
-      messages: []
-    })
-    this.currentUser.subscribeToRoom({
+  subscribeToRoom = async roomId => {
+    this.setState({ messages: [] });
+    // const { messages } = await subscribeToRoomAPI(roomId, this.currentUser);
+    // await Promise.all([messages]).then(messages => {
+    //   console.log("IM", messages[0]);
+    //   this.setState({
+    //     messages: [...messages]
+    //     // roomId: id
+    //   });
+    // });
+    this.currentUser.subscribeToRoomMultipart({
       roomId,
       hooks: {
-        onNewMessage: message => {
+        onMessage: message => {
+          console.log(roomId);
           this.setState({
-            messages: [...this.state.messages, message]
-          })
+            messages: [
+              ...this.state.messages,
+              {
+                text: message.parts[0].payload.content,
+                senderId: message.senderId
+              }
+            ],
+            roomId
+          });
         }
       }
-    }).then(room => {
-        this.getRooms(this.setState({
-          roomId: room.id
-        }))
-      })
-      .catch(err => console.log('error on subscribing to room: ', err))
-  }
-  
-  getRooms = () => {
-    this.currentUser.getJoinableRooms()
-      .then(joinableRooms => {
+    });
+  };
+
+  getRooms = async () => {
+    const joinableRooms = await getRoomsAPI(this.currentUser);
+    this.setState({ joinableRooms, joinedRooms: this.currentUser.rooms });
+  };
+
+  addRoom = roomName => {
+    if (roomName === "" || roomName.length < 3) {
+      console.log("Please, enter a longer room name.");
+      return;
+    }
+    const room = addRoomAPI(roomName, this.currentUser);
+    room
+      .then(room => {
         this.setState({
-          joinableRooms,
-          joinedRooms: this.currentUser.rooms
-        })
+          joinedRooms: [
+            ...this.currentUser.room,
+            { name: room.name, id: room.id }
+          ]
+        });
       })
-      .catch(err => {
-        console.log(`Error getting joinable rooms: ${err}`)
-      })
-  }
+      .catch(e => console.error("render error msj", e));
+  };
 
-  addRoom = (roomName) => {
-    this.currentUser.createRoom({
-      name: roomName,
-    }).then(room => {
-      this.subscribeToRoom(room.id)
-    })
-    .catch(err => {
-      console.log(`Error creating room ${err}`)
-    })
-  }
-
-  sendMessage = (text) => {
-    this.currentUser.sendMessage({
-      text,
-      roomId: this.state.roomId
-    })
-      .then(messageId => {
-        console.log(`Added message to 16444701`)
-      })
-      .catch(err => {
-        console.log(`Error adding message to 16444701: ${err}`)
-      })
-  }
+  sendMessage = message => {
+    const newMessage = sendMessageAPI(
+      message,
+      this.currentUser,
+      this.state.roomId
+    );
+    this.setState({ messages: [...this.state.messages, newMessage] });
+  };
 
   render() {
     return (
-      <div className="App">
-        <Rooms 
+      <ThemeProvider theme={theme}>
+        <AppDrawer
+          addRoom={this.addRoom}
           roomId={this.state.roomId}
           subscribeToRoom={this.subscribeToRoom}
-          rooms={[
-            ...this.state.joinableRooms,
-            ...this.state.joinedRooms
-        ]}/>
-        <MessageList 
-          messages={this.state.messages} 
-          roomId={this.state.roomId}
-        />
-        <SendMessageForm 
+          rooms={[...this.state.joinedRooms, ...this.state.joinableRooms]}
+          messages={this.state.messages}
           sendMessage={this.sendMessage}
           disable={!this.state.roomId}
         />
-        <NewRoomForm addRoom={this.addRoom}/>
-      </div>
+      </ThemeProvider>
     );
   }
 }

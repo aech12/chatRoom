@@ -1,52 +1,71 @@
-import React, { Component } from 'react'
-import '../containers/App.css';
+import React, { useState } from "react";
+import {
+  Input,
+  Button,
+  IconButton,
+  FormControl,
+  CssBaseline
+} from "@material-ui/core";
+import SendIcon from "@material-ui/icons/Send";
+import AddIcon from "@material-ui/icons/Add";
+import DeleteIcon from "@material-ui/icons/Delete";
+import { makeStyles } from "@material-ui/core/styles";
 
-export class SendMessageForm extends Component {
-
-  constructor() {
-    super()
-    this.state = {
-      message: ''
+const useStyles = makeStyles(theme => ({
+  sendMessageForm: {
+    flexDirection: "row",
+    input: {
+      color: "#fff"
     }
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+  },
+  sendMessageInput: {
+    flexGrow: 1,
+    width: "auto",
+    width: "100vw",
+    color: "#fff"
+  },
+  sendMessageButton: {
+    flexGrow: 0,
+    color: "#fff"
   }
+}));
 
-  handleChange(e) {
-    this.setState({
-      message: e.target.value
-    })
-  }
+const SendMessageForm = ({ disabled, sendMessage }) => {
+  const [message, setMessage] = useState("");
+  const classes = useStyles();
 
-  handleSubmit(e) {
+  const changeMessageText = e => setMessage(e.target.value);
+
+  const submitMessage = e => {
     e.preventDefault();
-    this.props.sendMessage(this.state.message)
-    this.setState({
-      message: ''
-    })
-  }
+    if (message === "") {
+      console.log("implement alert cant send empty message");
+      return;
+    }
+    sendMessage(message);
+    setMessage("");
+  };
 
-  render() {
-    return (
-      <form 
-      className="sendMessageForm" 
-      onSubmit={this.handleSubmit}>
-        <input
-          className='sendMessageInput'
-          disabled={this.props.disabled}
-          onChange={this.handleChange}
-          value={this.state.message}
-          placeholder="Send message"
-          type="text"
-        />
-        <button 
-          // className=''
-          type='submit'
-          id=''> Send
-        </button>
-      </form>
-    )
-  }
-}
+  return (
+    <FormControl className={classes.sendMessageForm} onSubmit={submitMessage}>
+      <CssBaseline />
+      <Input
+        className={classes.sendMessageInput}
+        onChange={changeMessageText}
+        placeholder="Send message"
+        required
+        type="text"
+        value={message}
+      />
+      <IconButton
+        className={classes.sendMessageButton}
+        type="submit"
+        edge="end"
+      >
+        <SendIcon />
+      </IconButton>
+    </FormControl>
+  );
+};
 
-export default SendMessageForm
+export default SendMessageForm;

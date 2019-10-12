@@ -1,4 +1,6 @@
-const instanceLocator = "v1:us1:797ea561-73a6-4296-a827-2c43f62400f7";
-const testTokenProvider = 'https://us1.pusherplatform.io/services/chatkit_token_provider/v1/797ea561-73a6-4296-a827-2c43f62400f7/token';
+const instanceLocator = "v1:us1:fecd9767-860f-4925-8c57-e94fb9b2008b";
+const testTokenProvider =
+  "https://us1.pusherplatform.io/services/chatkit_token_provider/v1/fecd9767-860f-4925-8c57-e94fb9b2008b/token";
+const userId = "Guest";
 
-export { instanceLocator, testTokenProvider };
+export { instanceLocator, testTokenProvider, userId };

@@ -1,50 +1,52 @@
-import React, { Component } from 'react';
-import '../containers/App.css';
-import './Components.css';
+import React, { useState } from "react";
+import { Input, Button } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import AddIcon from "@material-ui/icons/Add";
 
-class NewRoomForm extends Component {
-
-  constructor() {
-    super();
-    this.state = {
-      roomName: ''
-    }
+const useStyles = makeStyles(theme => ({
+  newRoomForm: {
+    flexDirection: "row"
+    // width: "100vw"
+  },
+  newRoomInput: {
+    width: "70%",
+    marginLeft: "5px"
+  },
+  newRoomButton: {
+    padding: 0
   }
+}));
+const NewRoomForm = ({ addRoom }) => {
+  const [roomName, setRoomName] = useState("");
+  const classes = useStyles();
 
-  handleChange = (e) => {
-    this.setState({
-      roomName: e.target.value
-    })
-  }
-  handleSubmit = (e) => {
+  const handleChange = e => setRoomName(e.target.value);
+
+  const handleSubmit = e => {
     e.preventDefault();
-    this.props.addRoom(this.state.roomName);
-    this.setState({
-      roomName: ''
-    })
-  }
+    addRoom(roomName);
+    setRoomName("");
+  };
 
-  render() {
-    return (
-      <div className='newRoomForm'>
-        <form onSubmit={this.handleSubmit}>
-          <input
-            className='newRoomInput'
-            value={this.state.roomName}
-            onChange={this.handleChange}
-            type='text'
-            placeholder='New Room'
-            required
-          />
-          <button 
-            className='newRoomButton'
-            type='submit'
-            id='create-room-button'> + 
-          </button>
-        </form>
-      </div>
-    )
-  }
-}
+  return (
+    <form className={classes.newRoomForm} onSubmit={handleSubmit}>
+      <Input
+        className={classes.newRoomInput}
+        onChange={handleChange}
+        placeholder="New Room"
+        required
+        type="text"
+        value={roomName}
+      />
+      <Button
+        className={classes.newRoomButton}
+        type="submit"
+        id="create-room-button"
+      >
+        <AddIcon />
+      </Button>
+    </form>
+  );
+};
 
 export default NewRoomForm;
